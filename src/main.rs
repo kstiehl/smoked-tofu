@@ -8,11 +8,18 @@ use clap::Parser;
 use command::Args;
 use app::AppState;
 use tracing::info;
-use tracing_subscriber;
+use tracing_subscriber::{self, EnvFilter};
+use tower_http::trace::TraceLayer;
 
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt::init();
+    tracing_subscriber::fmt()
+        .with_env_filter(
+            EnvFilter::try_from_default_env()
+                .or_else(|_| EnvFilter::try_new("smoked_tofu=debug,tower_http=debug"))
+                .unwrap(),
+        )
+        .init();
     
     let args = Args::parse();
     let port = args.port;
@@ -25,6 +32,7 @@ async fn main() {
     
     let app = Router::new()
         .route("/webhook", post(webhook::handle_webhook))
+        .layer(TraceLayer::new_for_http())
         .with_state(app_state);
 
     let bind_addr = format!("0.0.0.0:{}", port);
