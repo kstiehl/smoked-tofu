@@ -31,7 +31,7 @@ The name comes from the beautiful evolution: Terraform → OpenTofu → Smoked T
 cargo build --release
 
 # Fire it up!
-./target/release/smoked-tofu --port 3000 --command "tofu" --args "plan"
+./target/release/smoked-tofu --token YOUR_GITHUB_TOKEN --command "tofu" plan
 ```
 
 ## Why "Smoked" Tofu? 🤷‍♀️
