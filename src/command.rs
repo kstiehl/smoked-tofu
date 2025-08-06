@@ -8,6 +8,9 @@ pub struct Args {
     #[arg(short, long, help = "GitHub personal access token")]
     pub token: String,
     
+    #[arg(short, long, help = "GitHub webhook secret for signature verification")]
+    pub secret: String,
+    
     #[arg(short, long, default_value = "3000", help = "Port to run the webhook server on")]
     pub port: u16,
     

@@ -2,8 +2,9 @@ mod webhook;
 mod github;
 mod command;
 mod app;
+mod middleware;
 
-use axum::{routing::post, Router};
+use axum::{routing::post, Router, middleware::from_fn_with_state};
 use clap::Parser;
 use command::Args;
 use app::AppState;
@@ -32,6 +33,10 @@ async fn main() {
     
     let app = Router::new()
         .route("/webhook", post(webhook::handle_webhook))
+        .layer(from_fn_with_state(
+            app_state.webhook_secret.clone(),
+            middleware::verify_github_signature,
+        ))
         .layer(TraceLayer::new_for_http())
         .with_state(app_state);
 

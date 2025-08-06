@@ -13,6 +13,7 @@ The name comes from the beautiful evolution: Terraform → OpenTofu → Smoked T
 - 🎣 **GitHub Webhook Handler**: Catches those sweet, sweet push events
 - 🏃‍♂️ **Command Execution**: Runs your OpenTofu/Terraform commands automatically 
 - ✅ **GitHub Check Runs**: Updates your PRs with success/failure status
+- 🔒 **Secure**: HMAC-SHA256 signature verification protects against unauthorized requests
 - 🦀 **Rust Powered**: Because we like our infrastructure tools fast and reliable
 - 🔧 **Configurable**: Bring your own commands, we'll smoke 'em for you
 
@@ -31,7 +32,10 @@ The name comes from the beautiful evolution: Terraform → OpenTofu → Smoked T
 cargo build --release
 
 # Fire it up!
-./target/release/smoked-tofu --token YOUR_GITHUB_TOKEN --command "tofu" plan
+./target/release/smoked-tofu \
+  --token YOUR_GITHUB_TOKEN \
+  --secret YOUR_WEBHOOK_SECRET \
+  --command "tofu" plan
 ```
 
 ## Why "Smoked" Tofu? 🤷‍♀️
@@ -42,7 +46,15 @@ Plus, smoked tofu is delicious, and so is automated infrastructure! 😋
 
 ## Configuration 🎛️
 
-Point your GitHub webhook to `http://your-server:port/webhook` and watch the magic happen!
+### GitHub Webhook Setup
+
+1. Go to your repository → Settings → Webhooks → Add webhook
+2. Set **Payload URL** to `http://your-server:port/webhook`
+3. Set **Content type** to `application/json`
+4. **Set a Secret** - this must match your `--secret` parameter for security!
+5. Select events (usually just "Push events")
+
+⚠️ **Security Note**: The webhook secret is required to prevent unauthorized requests from executing your commands.
 
 ---
 

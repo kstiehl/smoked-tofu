@@ -6,6 +6,7 @@ use std::sync::Arc;
 pub struct AppState {
     pub github_client: Arc<GitHubClient>,
     pub command_executor: Arc<CommandExecutor>,
+    pub webhook_secret: String,
 }
 
 impl AppState {
@@ -16,6 +17,7 @@ impl AppState {
         Self {
             github_client,
             command_executor,
+            webhook_secret: args.secret,
         }
     }
 }
